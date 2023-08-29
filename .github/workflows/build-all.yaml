@@ -9,12 +9,6 @@ on:
         type: string
 
 jobs:
-  bionic:
-    uses: ./.github/workflows/build-image.yaml
-    with:
-      series: bionic
-      mirror: "${{ github.event.inputs.mirror }}"
-
   focal:
     uses: ./.github/workflows/build-image.yaml
     with:
@@ -27,13 +21,13 @@ jobs:
       series: jammy
       mirror: "${{ github.event.inputs.mirror }}"
 
-  kinetic:
+  lunar:
     uses: ./.github/workflows/build-image.yaml
     with:
-      series: kinetic
+      series: lunar
       mirror: "${{ github.event.inputs.mirror }}"
 
-  lunar:
+  mantic:
     uses: ./.github/workflows/build-image.yaml
     with:
       series: lunar
