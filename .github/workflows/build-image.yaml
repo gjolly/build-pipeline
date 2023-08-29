@@ -33,7 +33,7 @@ env:
 
 jobs:
   debootstrap:
-    runs-on: [self-hosted, Linux, 'ubuntu-${{ env.SERIES }}' ]
+    runs-on: [self-hosted, Linux, 'ubuntu-${{ github.event.inputs.series || inputs.series }}' ]
     steps:
       - name: update APT cache
         run: sudo apt-get update
@@ -57,7 +57,7 @@ jobs:
   # this is an non-bootable binary image which does
   # not include grub on any kernel
   base-image:
-    runs-on: [self-hosted, Linux, 'ubuntu-${{ env.SERIES }}' ]
+    runs-on: [self-hosted, Linux, 'ubuntu-${{ github.event.inputs.series || inputs.series }}' ]
     needs: ['debootstrap']
     steps:
       - name: update APT cache
@@ -92,7 +92,7 @@ jobs:
 
   # kvm kernel + grub
   kvm-image:
-    runs-on: [self-hosted, Linux, 'ubuntu-${{ env.SERIES }}' ]
+    runs-on: [self-hosted, Linux, 'ubuntu-${{ github.event.inputs.series || inputs.series }}' ]
     needs: ['base-image']
     steps:
       - name: installing dependencies
@@ -125,7 +125,7 @@ jobs:
 
   # azure kernel + grub + walinuxagent
   azure-image:
-    runs-on: [self-hosted, Linux, 'ubuntu-${{ env.SERIES }}' ]
+    runs-on: [self-hosted, Linux, 'ubuntu-${{ github.event.inputs.series || inputs.series }}' ]
     needs: ['base-image']
     steps:
       - name: installing dependencies
