@@ -27,12 +27,12 @@ jobs:
       - name: installing dependencies
         run: |
           sudo apt update && \
-          sudo apt full-upgrade && sudo apt install -y mtools python3-venv
+          sudo apt full-upgrade -y && sudo apt install -y mtools python3-venv
       - name: installing mkosi
         run: python3 -m venv mkosivenv && \
               ./mkosivenv/bin/pip install git+https://github.com/systemd/mkosi.git
       - name: creating disk-image
-        run: sudo mkosi --release "${{ env.SERIES }}"
+        run: sudo ./mkosivenv/bin/mkosi --release "${{ env.SERIES }}"
       - name: Saving disk-image
         uses: actions/upload-artifact@v3
         with:
