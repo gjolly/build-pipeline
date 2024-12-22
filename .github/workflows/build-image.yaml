@@ -28,7 +28,7 @@ jobs:
       - name: installing dependencies
         run: |
           sudo apt update && \
-          sudo apt install -y mtools python3-venv python3-pip
+          sudo apt install -y mtools python3-venv python3-pip bubblewrap systemd-repart systemd-container
       - name: installing mkosi
         run: python3 -m venv mkosivenv && ls -la mkosivenv/bin/pip && ./mkosivenv/bin/pip install git+https://github.com/systemd/mkosi.git
       - name: creating disk-image
