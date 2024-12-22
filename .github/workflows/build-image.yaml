@@ -5,14 +5,14 @@ on:
       series:
         description: Ubuntu series to build
         required: true
-        default: focal
+        default: noble
         type: string
   workflow_call:
     inputs:
       series:
         description: Ubuntu series to build
         required: true
-        default: focal
+        default: noble
         type: string
 
 # variables path are inconsistent when triggering with workflow_dispatch
@@ -30,8 +30,8 @@ jobs:
           sudo apt update && \
           sudo apt install -y mtools python3-venv python3-pip
       - name: installing mkosi
-        run: python3 -m venv mkosivenv && ls -la && \
-              mkosivenv/bin/pip install git+https://github.com/systemd/mkosi.git
+        run: python3 -m venv mkosivenv && ls -la mkosivenv && \
+              ./mkosivenv/bin/python3 -m pip install git+https://github.com/systemd/mkosi.git
       - name: creating disk-image
         run: sudo ./mkosivenv/bin/mkosi --release "${{ env.SERIES }}"
       - name: Saving disk-image
