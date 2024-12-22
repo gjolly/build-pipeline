@@ -19,6 +19,7 @@ on:
 # or workflow_call.
 env:
   SERIES: ${{ github.event.inputs.series || inputs.series }}
+  DEBIAN_FRONTEND: noninteractive
 
 jobs:
   base-image:
@@ -27,7 +28,8 @@ jobs:
       - name: installing dependencies
         run: |
           sudo apt update && \
-          sudo apt full-upgrade -y && sudo apt install -y mtools python3-venv
+          sudo apt full-upgrade -y && \
+          sudo apt install -y mtools python3-venv python3-pip
       - name: installing mkosi
         run: python3 -m venv mkosivenv && \
               ./mkosivenv/bin/pip install git+https://github.com/systemd/mkosi.git
