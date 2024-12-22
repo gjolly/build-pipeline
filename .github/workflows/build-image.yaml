@@ -25,6 +25,7 @@ jobs:
   base-image:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: installing dependencies
         run: |
           sudo apt update && \
