@@ -35,7 +35,7 @@ jobs:
       - name: creating disk-image
         run: sudo ./mkosivenv/bin/mkosi --release "${{ env.SERIES }}"
       - name: Saving disk-image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.SERIES }}.img
           path: image.raw
