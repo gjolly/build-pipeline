@@ -44,57 +44,28 @@ jobs:
         run: |
           sudo apt-get update && \
           sudo apt-get install -y \
-                qemu-utils \
                 debootstrap
       - name: installing genesis
         run: sudo python3 -m pip install git+https://github.com/gjolly/genesis.git@main
+      - name: running debootstrap
+        run: sudo genesis debootstrap --output ./rootfs --series $SERIES --mirror "${{ matrix.arch.mirror }}"
+      - name: creating tarball
+        run: sudo tar czf rootfs.tar.gz ./rootfs
 
-      - name: Downloading rootfs
+      - name: Saving rootfs
         run: |
-          curl -O $ORACLE_BUCKET_URL/base-rootfs/rootfs-$SERIES-${{ matrix.arch.name }}.tar.gz"
-      - name: Verifying rootfs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh attestation verify rootfs-$SERIES-${{ matrix.arch.name }}.tar.gz -o gjolly
-      - name: Extracting rootfs
-        run: |
-          sudo tar xf rootfs-$SERIES-${{ matrix.arch.name }}.tar.gz
-
-      - name: creating disk-image
-        run: sudo genesis create-disk --rootfs-dir ./rootfs
-      - name: Updating the system
-        run: |
-          sudo genesis update-system \
-            --disk-image disk.img \
-            --mirror "${{ matrix.arch.mirror }}" \
-            --series "$SERIES" \
-            --extra-package vim \
-            --extra-package ca-certificates \
-            --extra-package openssh-server \
-            --extra-package cloud-init \
-            --extra-package curl \
-            --extra-package linux-generic
-      - name: Install Grub
-        run: |
-          sudo genesis install-grub --disk-image disk.img
-      - name: Converting to qcow2
-        run: |
-          sudo qemu-img convert -f raw -O qcow2 disk.img disk.qcow2
-      - name: Saving disk-image
-        run: |
-          curl -X PUT -T disk.qcow2 \
+          curl -X PUT -T rootfs.tar.gz \
             -H "Content-Type: application/octet-stream" \
-            "$ORACLE_BUCKET_URL/$SERIES-${{ matrix.arch.name }}.img"
+            "$ORACLE_BUCKET_URL/base-rootfs/rootfs-$SERIES-${{ matrix.arch.name }}.tar.gz"
 
       - name: Attest Artifacts
         id: attest
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: 'disk.img'
+          subject-path: 'rootfs.tar.gz'
 
       - name: Saving attestation
         run: |
           curl -X PUT -T ${{ steps.attest.outputs.bundle-path }} \
             -H "Content-Type: application/json" \
-            "$ORACLE_BUCKET_URL/$SERIES-${{ matrix.arch.name }}.attestation.json"
+            "$ORACLE_BUCKET_URL/base-rootfs/$SERIES-${{ matrix.arch.name }}.attestation.json"

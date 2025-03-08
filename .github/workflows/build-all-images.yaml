@@ -1,4 +1,4 @@
-name: Build all series
+name: Build images for all series
 on:
   workflow_dispatch:
   schedule:

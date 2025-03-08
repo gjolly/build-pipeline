@@ -1,0 +1,44 @@
+name: Build base rootfs for all series
+on:
+  workflow_dispatch:
+
+jobs:
+  jammy:
+    uses: ./.github/workflows/build-base-rootfs.yaml
+    with:
+      series: jammy
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+
+  oracular:
+    uses: ./.github/workflows/build-base-rootfs.yaml
+    with:
+      series: oracular
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+
+  noble:
+    uses: ./.github/workflows/build-base-rootfs.yaml
+    with:
+      series: noble
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+
+  plucky:
+    uses: ./.github/workflows/build-base-rootfs.yaml
+    with:
+      series: plucky
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
